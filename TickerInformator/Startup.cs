@@ -11,8 +11,10 @@ using Willezone.Azure.WebJobs.Extensions.DependencyInjection;
  * Dependency injection
  * https://blog.wille-zone.de/post/dependency-injection-for-azure-functions/ 
  * 
+ * Not working on .net core 2.1
+ * https://github.com/Azure/azure-functions-host/issues/3386#issuecomment-419565714
  */
-//[assembly: WebJobsStartup(typeof(Startup))]
+[assembly: WebJobsStartup(typeof(Startup))]
 namespace TickerInformator
 {
     internal class Startup : IWebJobsStartup
@@ -22,10 +24,9 @@ namespace TickerInformator
 
         private void ConfigureServices(IServiceCollection services)
         {
-            //services.
-            //services.AddTransient<ITransientGreeter, Greeter>();
-            //services.AddScoped<IScopedGreeter, Greeter>();
-            //services.AddSingleton<ISingletonGreeter, Greeter>();
+            services.AddTransient<ISubscriberService, SubscriberService>();
+            services.AddSingleton<IEmailComposer, EmailComposer>();
+            services.AddSingleton<IHTMLComposer, StaticStringHTMLComposer>();
         }
     }
 }

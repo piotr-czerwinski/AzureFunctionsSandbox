@@ -2,7 +2,7 @@
 
 namespace TickerInformator
 {
-    interface ISubscriberService
+    public interface ISubscriberService
     {
         Task<bool> UpdateSubscriberData(SubmitInfo submitInfo);
     }

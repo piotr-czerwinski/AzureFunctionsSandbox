@@ -3,31 +3,35 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
 using SendGrid.Helpers.Mail;
-using static TickerInformator.SubscriberDataUpdater;
 
 namespace TickerInformator
 {
-    public static class EmailComposer
+    public class EmailComposer : IEmailComposer
     {
-        public static SendGridMessage CreateUpdateMessage(UpdaterOrchestratorData activationData)
+        EmailAddress _sender;
+        public EmailComposer()
+        {
+            _sender = new EmailAddress(Environment.GetEnvironmentVariable("FromEmailAddress"), Environment.GetEnvironmentVariable("FromEmailName"));
+        }
+        public SendGridMessage CreateUpdateMessage(UpdaterOrchestratorData activationData)
         {
             SendGridMessage message = new SendGridMessage()
             {
                 Subject = $"Ticker informator update"
             };
-            message.From = SenderAddress();
+            message.From = _sender;
             message.AddTo(activationData.SubmitInfo.Email);
             message.AddContent("text/html", $"Update info: {GetConfirmationUri(activationData)}");
             return message;
         }
 
-        public static SendGridMessage CreateActivationMessage(UpdaterOrchestratorData activationData)
+        public SendGridMessage CreateActivationMessage(UpdaterOrchestratorData activationData)
         {
             SendGridMessage message = new SendGridMessage()
             {
                 Subject = $"Ticker informator activation"
             };
-            message.From = SenderAddress();
+            message.From = _sender;
             message.AddTo(activationData.SubmitInfo.Email);
 
             string confirmationUri = GetConfirmationUri(activationData);
@@ -35,13 +39,13 @@ namespace TickerInformator
             return message;
         }
 
-        public static SendGridMessage CreateAlertEmail(Alert alert)
+        public SendGridMessage CreateAlertEmail(Alert alert)
         {
             SendGridMessage message = new SendGridMessage()
             {
                 Subject = $"Ticker informator"
             };
-            message.From = SenderAddress();
+            message.From = _sender;
             message.AddTo(alert.Addressee);
             message.AddContent("text/html", $"Current price: {alert.CurrentPrice} USD, last day: {alert.LastDayChange}%, last hour: {alert.LastHourChange}%");
             return message;
@@ -52,11 +56,6 @@ namespace TickerInformator
             var queryParameters = new Dictionary<string, string>();
             queryParameters["id"] = activationData.InstanceId;
             return QueryHelpers.AddQueryString(Environment.GetEnvironmentVariable("HostUrl") + "/ConfirmChange", queryParameters);
-        }
-
-        private static EmailAddress SenderAddress()
-        {
-            return new EmailAddress(Environment.GetEnvironmentVariable("FromEmailAddress"), Environment.GetEnvironmentVariable("FromEmailName"));
         }
     }
 }

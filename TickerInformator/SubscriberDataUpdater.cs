@@ -10,6 +10,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 using SendGrid.Helpers.Mail;
+using Willezone.Azure.WebJobs.Extensions.DependencyInjection;
 
 namespace TickerInformator
 {
@@ -47,6 +48,7 @@ namespace TickerInformator
         public static async Task<SendGridMessage> SendConfirmationEmail(
             [ActivityTrigger]UpdaterOrchestratorData orchestratorData,
             [Table("Subscribers")] CloudTable subscribersTable,
+            [Inject] IEmailComposer emailComposer,
             ILogger log)
         {
             log.LogInformation($"SendConfirmationEmail to: {orchestratorData.SubmitInfo.Email}");
@@ -57,7 +59,7 @@ namespace TickerInformator
                 return null;
             }
             SubscriberInfo subscriberInfo = await subscribersTable.GetTableEntity<SubscriberInfo>(emailSplited[1], emailSplited[0]);
-            return subscriberInfo == null ? EmailComposer.CreateActivationMessage(orchestratorData) : EmailComposer.CreateUpdateMessage(orchestratorData);
+            return subscriberInfo == null ? emailComposer.CreateActivationMessage(orchestratorData) : emailComposer.CreateUpdateMessage(orchestratorData);
         }
 
         [FunctionName("ConfirmChange")]
@@ -78,6 +80,7 @@ namespace TickerInformator
             [Table("HourlyAlertLevels")] CloudTable alertLevelsTable,
             ILogger log)
         {
+            //DI of tables to object not possible
             SubscriberService subscriberService = new SubscriberService(alertLevelsTable, subscribersTable);
 
             return await subscriberService.UpdateSubscriberData(submitInfo);
