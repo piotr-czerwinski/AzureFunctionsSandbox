@@ -72,10 +72,10 @@ namespace TickerInformator
 
             log.LogInformation($"Last hour change: {decimal.Round(lastHourChange * 100, 2)}%");
             log.LogInformation($"Last day change: {decimal.Round(lastDayChange * 100, 2)}%");
-            decimal trackedChange = trackDailyChange ? Math.Max(Math.Abs(lastHourChange), Math.Abs(lastDayChange)) : Math.Abs(lastDayChange);
+            decimal trackedChange = (trackDailyChange ? Math.Max(Math.Abs(lastHourChange), Math.Abs(lastDayChange)) : Math.Abs(lastHourChange)) * 100;
             if (trackedChange >= 1)
             {
-                foreach (var levelOfAlert in Enumerable.Range(1, (int)trackedChange))
+                foreach (int levelOfAlert in Enumerable.Range(1, (int)trackedChange))
                 {
                     await SendAlertsForLevel(log, subscribersTable, outputQueueItem, lastHourChange, lastDayChange, latest, levelOfAlert);
                 }
@@ -103,7 +103,7 @@ namespace TickerInformator
 
         private static string BuildTickerServiceUri()
         {
-            var queryParameters = new Dictionary<string, string>();
+            Dictionary<string, string> queryParameters = new Dictionary<string, string>();
             queryParameters["fsym"] = "BTC";
             queryParameters["tsym"] = "USD";
             queryParameters["limit"] = "24";
