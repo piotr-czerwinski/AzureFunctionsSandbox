@@ -77,12 +77,12 @@ namespace TickerInformator
             {
                 foreach (var levelOfAlert in Enumerable.Range(1, (int)trackedChange))
                 {
-                    await SendAlertsForLevel(log, subscribersTable, outputQueueItem, lastHourChange, lastDayChange, levelOfAlert);
+                    await SendAlertsForLevel(log, subscribersTable, outputQueueItem, lastHourChange, lastDayChange, latest, levelOfAlert);
                 }
             }
         }
 
-        private static async Task SendAlertsForLevel(ILogger log, CloudTable subscribersTable, IAsyncCollector<Alert> outputQueueItem, decimal lastHourChange, decimal lastDayChange, int levelOfAlert)
+        private static async Task SendAlertsForLevel(ILogger log, CloudTable subscribersTable, IAsyncCollector<Alert> outputQueueItem, decimal lastHourChange, decimal lastDayChange, decimal currentPrice, int levelOfAlert)
         {
             List<TableEntity> subscribersForLevel = await subscribersTable.GetAll<TableEntity>(levelOfAlert.ToString("D3"));
             if (!subscribersForLevel.Any())
@@ -95,7 +95,8 @@ namespace TickerInformator
                 {
                     Addressee = subscriber.RowKey,
                     LastHourChange = decimal.Round(lastHourChange * 100, 2),
-                    LastDayChange = decimal.Round(lastDayChange * 100, 2)
+                    LastDayChange = decimal.Round(lastDayChange * 100, 2),
+                    CurrentPrice = currentPrice
                 });
             }
         }

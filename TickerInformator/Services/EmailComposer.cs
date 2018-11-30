@@ -43,7 +43,7 @@ namespace TickerInformator
             };
             message.From = SenderAddress();
             message.AddTo(alert.Addressee);
-            message.AddContent("text/html", $"Last day: {alert.LastDayChange}%, Last hour: {alert.LastHourChange}%");
+            message.AddContent("text/html", $"Current price: {alert.CurrentPrice} USD, last day: {alert.LastDayChange}%, last hour: {alert.LastHourChange}%");
             return message;
         }
 
