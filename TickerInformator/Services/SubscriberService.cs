@@ -95,7 +95,7 @@ namespace TickerInformator
             {
                 await _alertsTable.ExecuteAsync(TableOperation.Delete(entityToBeDeleted));
             }
-            catch (StorageException storageException) //when entity does not exesit already it throws
+            catch (StorageException) //when entity does not exesit already it throws
             {
                 return false;
             }
