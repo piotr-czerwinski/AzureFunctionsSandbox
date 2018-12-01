@@ -65,7 +65,7 @@ namespace TickerInformator
         private static async Task SendAlertsToSubscribers(ILogger log, CloudTable subscribersTable, IAsyncCollector<Alert> outputQueueItem, bool trackDailyChange, TickerHistory history)
         {
             decimal latest = history.Data[history.Data.Length - 1].Close;
-            decimal lastHour = history.Data[history.Data.Length - 3].Close;
+            decimal lastHour = history.Data[history.Data.Length - 2].Open;
             decimal lastDay = history.Data[0].Close;
             decimal lastHourChange = (latest - lastHour) / lastHour;
             decimal lastDayChange = (latest - lastDay) / lastDay;
