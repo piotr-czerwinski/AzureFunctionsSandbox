@@ -16,9 +16,9 @@ namespace TickerInformator
     {
         private static HttpClient httpClient = new HttpClient();
 
-        //At 9 and 21
+        //At 8 and 20
         [FunctionName("AlertDispatcherDaily")]
-        public static async Task RunDaily([TimerTrigger("0 0 9,21 * * *")]TimerInfo myTimer,
+        public static async Task RunDaily([TimerTrigger("0 0 8,20 * * *")]TimerInfo myTimer,
          ILogger log,
          [Table("HourlyAlertLevels")] CloudTable subscribersTable,
          [Queue("tosendemail", Connection = "AzureWebJobsStorage")] IAsyncCollector<Alert> outputQueueItem)
@@ -27,9 +27,9 @@ namespace TickerInformator
             await RunAlertDispatcher(log, subscribersTable, outputQueueItem, trackDailyChange: true);
         }
 
-        //From 10 to 20, every hour
+        //From 9 to 19, every hour
         [FunctionName("AlertDispatcherHourly")]
-        public static async Task RunHourly([TimerTrigger("0 0 10-20 * * *")]TimerInfo myTimer,
+        public static async Task RunHourly([TimerTrigger("0 0 9-19 * * *")]TimerInfo myTimer,
          ILogger log,
          [Table("HourlyAlertLevels")] CloudTable subscribersTable,
          [Queue("tosendemail", Connection = "AzureWebJobsStorage")] IAsyncCollector<Alert> outputQueueItem)
@@ -65,7 +65,7 @@ namespace TickerInformator
         private static async Task SendAlertsToSubscribers(ILogger log, CloudTable subscribersTable, IAsyncCollector<Alert> outputQueueItem, bool trackDailyChange, TickerHistory history)
         {
             decimal latest = history.Data[history.Data.Length - 1].Close;
-            decimal lastHour = history.Data[history.Data.Length - 2].Close;
+            decimal lastHour = history.Data[history.Data.Length - 3].Close;
             decimal lastDay = history.Data[0].Close;
             decimal lastHourChange = (latest - lastHour) / lastHour;
             decimal lastDayChange = (latest - lastDay) / lastDay;
