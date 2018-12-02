@@ -14,7 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{A83A1AF3-F66
 	ProjectSection(SolutionItems) = preProject
 		doc\Alert.PNG = doc\Alert.PNG
 		doc\TickerInfoForm.PNG = doc\TickerInfoForm.PNG
-		doc\TickerInfoForm_2.PNG = doc\TickerInfoForm_2.PNG
 	EndProjectSection
 EndProject
 Global

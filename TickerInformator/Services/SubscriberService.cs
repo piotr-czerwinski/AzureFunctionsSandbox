@@ -25,7 +25,7 @@ namespace TickerInformator
                 PartitionKey = emailSplited[1],
                 RowKey = emailSplited[0],
                 Active = true,
-                AlertTreshold = submitInfo.AlertTreshold ?? 0
+                AlertThreshold = submitInfo.AlertThreshold ?? 0
             };
             if (existingInfo != null)
             {
@@ -35,23 +35,23 @@ namespace TickerInformator
             TableOperation subscribersTableOperation = null;
             if (existingInfo != null)
             {
-                if ((submitInfo.AlertTreshold ?? 0) == 0)
+                if ((submitInfo.AlertThreshold ?? 0) == 0)
                 {
-                    await DeleteAlertLevelsOperation(existingInfo.AlertTreshold, submitInfo.Email);
+                    await DeleteAlertLevelsOperation(existingInfo.AlertThreshold, submitInfo.Email);
                     subscribersTableOperation = TableOperation.Delete(existingInfo);
 
                 }
-                else if (submitInfo.AlertTreshold != existingInfo.AlertTreshold)
+                else if (submitInfo.AlertThreshold != existingInfo.AlertThreshold)
                 {
-                    await DeleteAlertLevelsOperation(existingInfo.AlertTreshold, submitInfo.Email);
-                    await InsertAlertLevelsOperation(submitInfo.AlertTreshold.Value, submitInfo.Email);
+                    await DeleteAlertLevelsOperation(existingInfo.AlertThreshold, submitInfo.Email);
+                    await InsertAlertLevelsOperation(submitInfo.AlertThreshold.Value, submitInfo.Email);
                     subscribersTableOperation = TableOperation.Replace(newSubscriberInfo);
 
                 }
             }
             else
             {
-                await InsertAlertLevelsOperation(submitInfo.AlertTreshold.Value, submitInfo.Email);
+                await InsertAlertLevelsOperation(submitInfo.AlertThreshold.Value, submitInfo.Email);
                 subscribersTableOperation = TableOperation.Insert(newSubscriberInfo);
             }
 

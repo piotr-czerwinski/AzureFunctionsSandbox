@@ -6,6 +6,6 @@ namespace  TickerInformator
     public class SubscriberInfo : TableEntity
     {
         public bool Active {get;set;}
-        public int AlertTreshold { get; set; }
+        public int AlertThreshold { get; set; }
     }
 }

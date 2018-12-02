@@ -33,10 +33,10 @@ namespace TickerInformator
     </tr>
     <tr> 
         <td>
-            Alert treshold:
+            Alert threshold:
         </td>
         <td>
-            <input type=""number"" name=""alertTreshold"" min=""0"" max=""99"" value =""5"">% (+-)
+            <input type=""number"" name=""alertThreshold"" min=""0"" max=""99"" value =""5"">% (+-)
         </td>
     </tr>
 </table>
@@ -50,11 +50,11 @@ $( ""#searchForm"" ).submit(function( event ) {
  
     var $form = $( this ),
     email = $form.find( ""input[name='email']"" ).val(),
-    alertTreshold = $form.find( ""input[name='alertTreshold']"" ).val(),
+    alertThreshold = $form.find( ""input[name='alertThreshold']"" ).val(),
     url = $form.attr( ""action"" );
  
     // Send the data using post
-    var posting = $.post( url, JSON.stringify({ ""email"": email, ""alertTreshold"" : alertTreshold}) );
+    var posting = $.post( url, JSON.stringify({ ""email"": email, ""alertThreshold"" : alertThreshold}) );
  
     // Put the results in a div
     posting.done(function( data ) {

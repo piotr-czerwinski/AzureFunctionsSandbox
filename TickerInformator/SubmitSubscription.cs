@@ -24,8 +24,8 @@ namespace TickerInformator
                 log.LogInformation(requestBody);
 
                 SubmitInfo submitInfo = JsonConvert.DeserializeObject<SubmitInfo>(requestBody);
-                log.LogInformation($"Subscription submited by {submitInfo.Email} with treshold {submitInfo.AlertTreshold}");
-                if (!string.IsNullOrWhiteSpace(submitInfo.Email) && submitInfo.AlertTreshold.HasValue && submitInfo.AlertTreshold.Value >= 0)
+                log.LogInformation($"Subscription submited by {submitInfo.Email} with treshold {submitInfo.AlertThreshold}");
+                if (!string.IsNullOrWhiteSpace(submitInfo.Email) && submitInfo.AlertThreshold.HasValue && submitInfo.AlertThreshold.Value >= 0)
                 {
                     string instanceId = await starter.StartNewAsync("SubscriberDataUpdaterOrchestrator", submitInfo);
                     return new OkObjectResult($"Thank you, {submitInfo.Email}! Please wait for confirmation e-mail.");
