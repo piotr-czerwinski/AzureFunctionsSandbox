@@ -44,8 +44,8 @@ To start app locally configuration file local.settings.json should be added:
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-    "CustomSendGridKeyAppSettingName": "Send grid api key",
-    "HostUrl": "api endpoint",
+    "CustomSendGridKeyAppSettingName": "SendGrid api key",
+    "HostUrl": "function api endpoint",
     "FromEmailAddress": "e-mail@of.alert.sender",
     "FromEmailName": "name of alert sender",
     "MinApiKey": "BTC service api key"
