@@ -21,7 +21,17 @@ Simple app to scan bitcoin price history and send e-mail alert to subscribers if
 ![Alert](https://raw.githubusercontent.com/piotr-czerwinski/AzureFunctionsSandbox/master/doc/Alert.PNG)
 
 ### Dependency injection
-I use [Willezone.Azure.WebJobs.Extensions.DependencyInjection](https://www.nuget.org/packages/Willezone.Azure.WebJobs.Extensions.DependencyInjection) library which enable simple injection of dependeny with `[Inject]` attribute. Container configuration is performed on `Startup` class:
+I use [Willezone.Azure.WebJobs.Extensions.DependencyInjection](https://www.nuget.org/packages/Willezone.Azure.WebJobs.Extensions.DependencyInjection) library which enables simple injection of dependency with `[Inject]` attribute:
+
+```
+        [FunctionName("SubscribeForm")]
+        public static HttpResponseMessage Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+            [Inject] IHTMLComposer HTMLComposer,
+            ILogger log)
+```
+
+Container configuration is performed on `Startup` class:
 
 ```
     internal class Startup : IWebJobsStartup
