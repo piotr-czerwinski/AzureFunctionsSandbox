@@ -17,6 +17,7 @@ Simple app to scan bitcoin price history and send e-mail alert to subscribers if
 
 ### Queue triggered e-mail sender
 `SendAlertToSubscribers` consumes queue item and sends e-mails via SendGrid:
+
 ![Alert](https://raw.githubusercontent.com/piotr-czerwinski/AzureFunctionsSandbox/master/doc/Alert.PNG)
 
 ### Dependency injection
