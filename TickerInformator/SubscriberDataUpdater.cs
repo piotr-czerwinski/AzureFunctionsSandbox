@@ -27,7 +27,7 @@ namespace TickerInformator
 
             using (CancellationTokenSource timeoutCts = new CancellationTokenSource())
             {
-                DateTime dueTime = ctx.CurrentUtcDateTime.AddMinutes(5);
+                DateTime dueTime = ctx.CurrentUtcDateTime.AddHours(1);
                 Task durableTimeout = ctx.CreateTimer(dueTime, timeoutCts.Token);
                 Task<bool> approvalEvent = ctx.WaitForExternalEvent<bool>($"ApprovalEvent");
                 if (approvalEvent == await Task.WhenAny(approvalEvent, durableTimeout)) //Terminate after 1 hour without confirmation event
