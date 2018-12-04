@@ -13,6 +13,9 @@ using Willezone.Azure.WebJobs.Extensions.DependencyInjection;
  * 
  * Not working on .net core 2.1
  * https://github.com/Azure/azure-functions-host/issues/3386#issuecomment-419565714
+ * 
+ * Do not update WindowsAzure.Storage!
+ * https://github.com/Azure/azure-functions-host/issues/3784
  */
 [assembly: WebJobsStartup(typeof(Startup))]
 namespace TickerInformator
