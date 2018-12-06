@@ -13,7 +13,7 @@ Simple app to scan bitcoin price history and send e-mail alert to subscribers if
 `SubscriberDataUpdaterOrchestrator`is DurableFunction with purpose of sending confirmation e-mail after subscription request. Confirmation must be done within 1 hour or orchestrator rejects. E-mails are send with SendGrid output binding. Confirmation e-mail contains link to `ConfirmChange` function, which raises event handled by orchestrator.
 
 ### Time triggered alert dispatcher (with Queue collector)
-`AlertDispatcher.RunDaily`  and `AlertDispatcher.RunHourly` functions with cron expressions of `0 0 8,20 * * *` and `0 0 9-19 * * *"` respectively are responsible to query [cryptocompare api](https://min-api.cryptocompare.com/). If change in price is big enough dispatcher adds  to Azure storage Queue. 
+`AlertDispatcher.RunDaily`  and `AlertDispatcher.RunHourly` functions, with cron expressions of `0 0 8,20 * * *` and `0 0 9-19 * * *"` respectively, are responsible to query [cryptocompare api](https://min-api.cryptocompare.com/). If change in price is greater than threshold defined by subscriber, function adds his e-mail to Azure Storage Queue. 
 
 ### Queue triggered e-mail sender
 `SendAlertToSubscribers` consumes queue item and sends e-mails via SendGrid:
@@ -21,7 +21,17 @@ Simple app to scan bitcoin price history and send e-mail alert to subscribers if
 ![Alert](https://raw.githubusercontent.com/piotr-czerwinski/AzureFunctionsSandbox/master/doc/Alert.PNG)
 
 ### Dependency injection
-I use [Willezone.Azure.WebJobs.Extensions.DependencyInjection] (https://www.nuget.org/packages/Willezone.Azure.WebJobs.Extensions.DependencyInjection) library which enable simple injection of dependeny with `[Inject]` attribute. Container configuration is performed on `Startup` class:
+I use [Willezone.Azure.WebJobs.Extensions.DependencyInjection](https://www.nuget.org/packages/Willezone.Azure.WebJobs.Extensions.DependencyInjection) library which enables simple injection of dependency with `[Inject]` attribute:
+
+```
+        [FunctionName("SubscribeForm")]
+        public static HttpResponseMessage Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+            [Inject] IHTMLComposer HTMLComposer,
+            ILogger log)
+```
+
+Container configuration is performed on `Startup` class:
 
 ```
     internal class Startup : IWebJobsStartup
