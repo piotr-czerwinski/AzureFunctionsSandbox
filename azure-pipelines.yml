@@ -1,22 +1,69 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 pool:
   vmImage: 'vs2017-win2016'
+  
+resources:
+- repo: self
+
+queue:
+  name: Hosted VS2017
+  demands: 
+
+  - msbuild
+  - visualstudio
+  - vstest
 
 variables:
-  buildConfiguration: 'Release'
+  BuildConfiguration: 'Release'
+  BuildPlatform: 'any cpu'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
+- task: NuGetToolInstaller@0
+  displayName: 'Use NuGet 4.4.1'
   inputs:
-    command: publish
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
+    versionSpec: 4.4.1
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+ # inputs:
+ #   restoreSolution: '$(Parameters.solution)'
+    
+
+- task: VSBuild@1
+  displayName: 'Build solution'
+  inputs:
+#    solution: '$(Parameters.solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl="$(Agent.TempDirectory)\WebAppContent\\"'
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive Files'
+  inputs:
+    rootFolderOrFile: '$(Agent.TempDirectory)\WebAppContent'
+    includeRootFolder: false
+
+- task: VSTest@2
+  displayName: 'Test Assemblies'
+  inputs:
+    testAssemblyVer2: |
+     **\$(BuildConfiguration)\*test*.dll
+     !**\obj\**
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+
+
+
+- task: PublishSymbols@2
+  displayName: 'Publish symbols path'
+  inputs:
+    SearchPattern: '**\bin\**\*.pdb'
+    PublishSymbols: false
+  continueOnError: true
+
+
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+#    ArtifactName: '$(Parameters.ArtifactName)'
