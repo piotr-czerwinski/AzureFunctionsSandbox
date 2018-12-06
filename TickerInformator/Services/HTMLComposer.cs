@@ -20,7 +20,7 @@ namespace TickerInformator
 </head>
 <body>
 <h1>Ticker info</h1>
-<p>Enter e-mail and alert threshold for BTC/USD change (checked hourly 8-20). Set threshold to '0' to unsubscribe!</p>
+<p>Enter e-mail and alert threshold for BTC/USD change (checked hourly 8-20). Set threshold to '0' to unsubscribe</p>
 <form action=""" + hostUrl + @"/SubmitSubscription"" id=""searchForm"">
 <table>
     <tr>    
