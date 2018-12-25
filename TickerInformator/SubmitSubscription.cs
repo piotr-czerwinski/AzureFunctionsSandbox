@@ -27,7 +27,7 @@ namespace TickerInformator
                 log.LogInformation($"Subscription submited by {submitInfo.Email} with treshold {submitInfo.AlertThreshold}");
                 if (!string.IsNullOrWhiteSpace(submitInfo.Email) && submitInfo.AlertThreshold.HasValue && submitInfo.AlertThreshold.Value >= 0)
                 {
-                    string instanceId = await starter.StartNewAsync("SubscriberDataUpdaterOrchestrator", submitInfo);
+                    //string instanceId = await starter.StartNewAsync("SubscriberDataUpdaterOrchestrator", submitInfo);
                     return new OkObjectResult($"Thank you, {submitInfo.Email}! Please wait for confirmation e-mail.");
                 }
                 else

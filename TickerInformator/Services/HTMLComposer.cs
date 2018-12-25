@@ -58,6 +58,7 @@ $( ""#searchForm"" ).submit(function( event ) {
  
     // Put the results in a div
     posting.done(function( data ) {
+    alert(data);    
     $( ""#result"" ).empty().append( data );
     });
 });
